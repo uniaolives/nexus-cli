@@ -13,6 +13,8 @@
         #start-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; padding: 20px; background: #000; border: 1px solid #0f0; color: #0f0; cursor: pointer; }
         button { background: #000; border: 1px solid #0f0; color: #0f0; cursor: pointer; margin-right: 5px; }
         #status-box { color: cyan; }
+        #evolution-box { position: absolute; top: 10px; right: 10px; text-align: right; background: rgba(0,0,0,0.5); padding: 5px; }
+        .trait-row { font-size: 10px; }
     </style>
 </head>
 <body>
@@ -21,6 +23,11 @@
     <div>MERKABAH-7 // PINEAL_LINK: <span id="status">OFFLINE</span></div>
     <div>COH: <span id="coh-val">0.00</span> | JIT: <span id="jit-val">0.00</span></div>
     <div id="status-box">MODO: LIVE</div>
+</div>
+
+<div id="evolution-box">
+    <div>GENOMA EVOLUTIVO (Ω)</div>
+    <div id="char-matrix"></div>
 </div>
 
 <div id="controls">
@@ -67,6 +74,20 @@
     });
 
     socket.on('connect', () => { document.getElementById('status').innerText = "ONLINE"; });
+
+    async function updateEvolution() {
+        try {
+            const res = await fetch('/character/evolution');
+            const data = await res.json();
+            let html = "";
+            data.nodes.forEach((node, i) => {
+                let traits = data.matrix[i].map(v => v.toFixed(2)).join(" | ");
+                html += `<div class="trait-row">${node}: ${traits}</div>`;
+            });
+            document.getElementById('char-matrix').innerHTML = html;
+        } catch(e) {}
+    }
+    setInterval(updateEvolution, 2000);
 
     socket.on('pineal_data', (data) => {
         pineal = data;

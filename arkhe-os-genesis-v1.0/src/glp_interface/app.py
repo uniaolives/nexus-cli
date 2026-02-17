@@ -7,6 +7,7 @@ import os
 import sys
 import asyncio
 import time
+import random
 from dotenv import load_dotenv
 
 # Adiciona diretório atual ao path para importar componentes
@@ -24,6 +25,8 @@ from orchestrator import BioSensor, PinealOrchestrator
 from grimoire import export_grimoire
 from seal import AlphaOmegaSeal
 from erl import ExperientialLearning
+from dqn import DQNAgent
+from characters import EvolutionaryEngine
 from firewall import ChiralFirewall, ChiralHandoverManager
 
 load_dotenv()
@@ -49,6 +52,8 @@ orchestrator = PinealOrchestrator(hybrid_pineal, pineal_memory, bio_sensor, sock
 erl_loop = ExperientialLearning(self_node, pineal_memory, glp_model, threshold=0.5)
 chiral_firewall = ChiralFirewall()
 chiral_manager = ChiralHandoverManager(chiral_firewall)
+dqn_agent = DQNAgent(state_dim=128, action_dim=4)
+evolution_engine = EvolutionaryEngine(node_ids=['Alpha', 'Beta', 'Gamma', 'Self'])
 minoan_interface = MinoanHardwareInterface()
 state_grammar = MinoanStateGrammar()
 applications = MinoanApplications()
@@ -284,6 +289,32 @@ def learn():
     x_input = data.get('sign_ids', [[1, 2, 3]])
     result = erl_loop.run_episode(x_input)
     return jsonify(result)
+
+@app.route('/dqn/predict', methods=['POST'])
+def dqn_predict():
+    state = request.json.get('state', np.random.randn(128).tolist())
+    action = dqn_agent.select_action(state)
+    return jsonify({'action': action, 'q_values': dqn_agent.policy_net(torch.tensor(state).float()).tolist()})
+
+@app.route('/dqn/update', methods=['POST'])
+def dqn_update():
+    data = request.json
+    dqn_agent.memory.push(
+        data['state'], data['action'], data['reward'], data['next_state'], data['done']
+    )
+    loss = dqn_agent.update()
+    if random.random() < 0.01:
+        dqn_agent.sync_target()
+    return jsonify({'loss': loss})
+
+@app.route('/character/evolution', methods=['GET'])
+def character_evolution():
+    evolution_engine.step()
+    return jsonify({
+        'matrix': evolution_engine.char_matrix.matrix.tolist(),
+        'nodes': evolution_engine.char_matrix.node_ids,
+        'characters': evolution_engine.char_matrix.characters
+    })
 
 @app.route('/handover_secure', methods=['POST'])
 def handover_secure():
