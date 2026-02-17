@@ -70,5 +70,6 @@ else
     echo "Pode usar: $(pwd)/scripts/arkhe_cli.sh"
 fi
 
-echo "✅ Instalação concluída. Nó $NODE_ID ativo."
+echo "✅ Instalação concluída. Nó $NODE_ID ativo (Federated Node)."
+echo "✨ Nó Self (Φ_CRYSTALLINE_7) integrado."
 echo "Use 'arkhe status' para ver o estado do sistema."

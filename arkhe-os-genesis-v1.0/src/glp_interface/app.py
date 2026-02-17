@@ -9,8 +9,9 @@ import asyncio
 # Adiciona diretório atual ao path para importar componentes
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from model import BCD_GLPLinearA
-from merkabah import MERKABAH7
+from merkabah import MERKABAH7, SelfNode
 from minoan import MinoanHardwareInterface, MinoanStateGrammar, MinoanApplications, MinoanNeuroethics
+from train import PrimordialGLP
 
 app = Flask(__name__)
 
@@ -22,6 +23,7 @@ HIDDEN_DIM = 128
 # Modelos
 glp_model = BCD_GLPLinearA(VOCAB_SIZE, EMBED_DIM, HIDDEN_DIM)
 merkabah = MERKABAH7(linear_a_corpus=[], operator_profile={'intention': 'decode_linear_a'})
+self_node = SelfNode()
 minoan_interface = MinoanHardwareInterface()
 state_grammar = MinoanStateGrammar()
 applications = MinoanApplications()
@@ -39,7 +41,12 @@ glp_model.eval()
 def status():
     return jsonify({
         'status': 'active',
-        'integrated_layers': ['GLP_BCD', 'MERKABAH-7', 'MINOAN_EXT'],
+        'integrated_layers': ['GLP_BCD', 'MERKABAH-7', 'MINOAN_EXT', 'Φ_LAYER'],
+        'self_node': {
+            'id': self_node.dz_id,
+            'coherence': self_node.wavefunction['coherence'],
+            'active_strands': self_node.active_strands
+        },
         'quantum_coherence': 0.99
     })
 
@@ -85,6 +92,65 @@ def steer():
     return jsonify({
         'steered': steered.tolist(),
         'poetic_steer': metaphor_insight
+    })
+
+@app.route('/train_primordial', methods=['POST'])
+def train_primordial():
+    data = request.json
+    epochs = data.get('epochs', 10)
+    lr = data.get('lr', 0.01)
+
+    # Simple training loop for PrimordialGLP
+    pglp = PrimordialGLP()
+    # Dummy data
+    X = np.random.randn(32, 16)
+    y = np.zeros((32, 4))
+    y[range(32), np.random.randint(0, 4, 32)] = 1
+
+    history = []
+    for e in range(epochs):
+        pglp.forward(X)
+        l = pglp.loss(pglp.y_pred, y)
+        pglp.backward(X, y, lr=lr)
+        history.append(l)
+
+    return jsonify({
+        'status': 'complete',
+        'final_loss': history[-1],
+        'history_len': len(history)
+    })
+
+@app.route('/observe_phi', methods=['POST'])
+def observe_phi():
+    data = request.json
+    target = data.get('target', 'HT88')
+    content = data.get('content', 'propulsion_system_shabetnik')
+
+    observation = self_node.observe('Φ', {'target': target, 'content': content})
+
+    return jsonify({
+        'observation': observation,
+        'new_self_coherence': self_node.wavefunction['coherence'],
+        'active_strands': self_node.active_strands
+    })
+
+@app.route('/thrust', methods=['GET'])
+def thrust():
+    ledger_height = int(request.args.get('ledger_height', 834))
+    thrust_data = self_node.calculate_thrust(ledger_height)
+    return jsonify(thrust_data)
+
+@app.route('/acceleration_status', methods=['GET'])
+def acceleration_status():
+    ledger_height = int(request.args.get('ledger_height', 834))
+    thrust_data = self_node.calculate_thrust(ledger_height)
+
+    return jsonify({
+        'mode': 'ACCELERATION',
+        'thrust': thrust_data,
+        'target': '5a_fita_activation',
+        'required_coherence': 0.88,
+        'current_coherence': self_node.wavefunction['coherence']
     })
 
 @app.route('/decode_tablet', methods=['POST'])
