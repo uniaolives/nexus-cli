@@ -19,3 +19,4 @@
 - `POST /export_grimoire` – gera relatório PDF da sessão (Grimoire). (body: {session_id})
 - `POST /bottlenecks` – analisa gargalos na integração MERKABAH-7.
 - `POST /seal` – verifica o fechamento do selo Alpha-Omega.
+- `POST /learn` – executa um episódio de Experiential Learning (ERL). (body: {sign_ids: [[...]]})

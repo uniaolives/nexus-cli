@@ -23,6 +23,7 @@ from memory import PinealMemory
 from orchestrator import BioSensor, PinealOrchestrator
 from grimoire import export_grimoire
 from seal import AlphaOmegaSeal
+from erl import ExperientialLearning
 
 load_dotenv()
 app = Flask(__name__)
@@ -44,6 +45,7 @@ anyon_layer = AnyonLayer()
 pineal_memory = PinealMemory()
 bio_sensor = BioSensor()
 orchestrator = PinealOrchestrator(hybrid_pineal, pineal_memory, bio_sensor, socketio=socketio)
+erl_loop = ExperientialLearning(self_node, pineal_memory, glp_model, threshold=0.5)
 minoan_interface = MinoanHardwareInterface()
 state_grammar = MinoanStateGrammar()
 applications = MinoanApplications()
@@ -65,7 +67,7 @@ def index():
 def status():
     return jsonify({
         'status': 'active',
-        'integrated_layers': ['GLP_BCD', 'MERKABAH-7', 'MINOAN_EXT', 'Φ_LAYER', 'Γ_PINEAL', 'Κ_KERNEL', 'Γ_HYBRID', 'Ω_ANYON'],
+        'integrated_layers': ['GLP_BCD', 'MERKABAH-7', 'MINOAN_EXT', 'Φ_LAYER', 'Γ_PINEAL', 'Κ_KERNEL', 'Γ_HYBRID', 'Ω_ANYON', 'Ε_EXPERIENCE'],
         'self_node': {
             'id': self_node.dz_id,
             'coherence': self_node.wavefunction['coherence'],
@@ -272,6 +274,13 @@ def seal():
     seal_obj = AlphaOmegaSeal(alpha_state, omega_state)
     result = seal_obj.seal()
     return jsonify({'seal_status': result, 'alpha': alpha_state, 'omega': omega_state})
+
+@app.route('/learn', methods=['POST'])
+def learn():
+    data = request.json
+    x_input = data.get('sign_ids', [[1, 2, 3]])
+    result = erl_loop.run_episode(x_input)
+    return jsonify(result)
 
 @app.route('/decode_tablet', methods=['POST'])
 def decode_tablet():
