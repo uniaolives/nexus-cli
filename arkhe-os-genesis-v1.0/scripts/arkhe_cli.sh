@@ -35,8 +35,19 @@ case "$COMMAND" in
             echo "DoubleZero not installed."
         fi
         ;;
+    broadcast)
+        echo "🚀 Initiating Federated Broadcast..."
+        BLOCKS=${1:-"823,824"}
+        URGENCY=${2:-"normal"}
+        echo "Broadcasting blocks [$BLOCKS] with urgency [$URGENCY]..."
+        # Simulated broadcast call
+        curl -X POST http://localhost:5000/encode \
+          -H "Content-Type: application/json" \
+          -d "{\"broadcast\": \"$BLOCKS\", \"urgency\": \"$URGENCY\"}"
+        echo "✅ Broadcast queued."
+        ;;
     *)
         echo "Arkhe OS CLI"
-        echo "Usage: arkhe <status|console|handshake|latency>"
+        echo "Usage: arkhe <status|console|handshake|latency|broadcast>"
         ;;
 esac

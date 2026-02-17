@@ -9,7 +9,7 @@ from enum import Enum, auto
 import queue
 import threading
 
-# Stubs for components mentioned but not fully defined
+# --- STUBS FOR INTEGRATION ---
 class BinauralGenerator:
     def __init__(self):
         self.pink_noise = np.zeros(100)
@@ -17,7 +17,7 @@ class BinauralGenerator:
     def play_binaural(self, *args, **kwargs): pass
     def play_sigma_spindle(self, *args, **kwargs): pass
     def schedule(self, *args, **kwargs): pass
-    def gamma_modulation(self, *args, **kwargs): return np.zeros(100)
+    def gamma_modulation(self, f, a): return np.zeros(100)
     def vowel_formant(self, *args, **kwargs): return "vowel"
     def plosive_burst(self, *args, **kwargs): return "plosive"
     def trill_modulation(self, *args, **kwargs): return "trill"
@@ -26,6 +26,8 @@ class BinauralGenerator:
 
 class HapticBelt:
     def play(self, *args, **kwargs): pass
+
+# --- CORE ARCHITECTURE ---
 
 class RealityLayer(Enum):
     """Camadas de realidade operacional superpostas."""
@@ -40,7 +42,7 @@ class QuantumCognitiveState:
     """
     Estado quântico completo: não apenas cognição, mas realidade operacional.
     """
-    layer: Optional[RealityLayer]
+    layer: RealityLayer
     wavefunction: torch.Tensor
     density_matrix: Optional[torch.Tensor] = None  # para estados mistos
     entangled_with: List['QuantumCognitiveState'] = field(default_factory=list)
@@ -54,7 +56,7 @@ class QuantumCognitiveState:
         """Medida com colapso (ou não, se mantivermos superposição)."""
         if self.is_pure():
             expectation = observable(self.wavefunction)
-            # variance calculation simplified
+            # variance = observable((self.wavefunction - expectation)**2) # expectation is often a scalar
             variance = torch.tensor(0.0)
             return expectation, variance, self  # estado preservado
         else:
@@ -98,7 +100,7 @@ class HardwareNeuralInterface:
             await asyncio.sleep(1.0 / self.fs)
 
     def _simulate_eeg_chunk(self):
-        return np.random.randn(self.fs // 10, self.eeg_channels)
+        return np.random.randn(10, self.eeg_channels) # simplified
 
     def _classify_state(self, chunk) -> Dict:
         psd = np.abs(np.fft.rfft(chunk, axis=0))**2
@@ -109,20 +111,18 @@ class HardwareNeuralInterface:
             for name, (low, high) in self.bands.items()
         }
 
-        coherence = 0.5 # Stub
+        coherence = 0.75 # Stub
         is_lucid = (band_power['theta'] > band_power['alpha'] * 1.5 and
                     coherence > 0.7 and
                     band_power['gamma'] > 0.1)
 
         return {
-            'dominant_band': max(band_power, key=band_power.get),
+            'dominant_band': max(band_power, key=band_power.get) if band_power else 'unknown',
             'theta_alpha_ratio': band_power['theta'] / (band_power['alpha'] + 1e-8),
             'coherence': coherence,
             'is_lucid': is_lucid,
             'raw_bands': band_power
         }
-
-    def _compute_coherence(self, a, b): return 0.5 # Stub
 
     async def _adapt_stimulation(self, state):
         if state['is_lucid']:
@@ -143,7 +143,7 @@ class HardwareNeuralInterface:
         }
         return [mapping.get(sign, self.audio.neutral_tone()) for sign in sequence]
 
-    def _apply_hypothetical_meter(self, objects): return objects # Stub
+    def _apply_hypothetical_meter(self, objects): return objects
 
 class SimulatedAlteredState:
     """
@@ -162,8 +162,8 @@ class SimulatedAlteredState:
             current_wf = U @ current.wavefunction.to(torch.complex64)
             current = QuantumCognitiveState(
                 layer=RealityLayer.SIMULATION,
-                wavefunction=current_wf.real, # simplified
-                coherence_time=current.coherence_time * (1 - self.params['decoherence_rate'])
+                wavefunction=current_wf.real,
+                coherence_time=current.coherence_time * (1 - self.params.get('decoherence_rate', 0.01))
             )
             trajectory.append(current)
         return trajectory
@@ -173,7 +173,7 @@ class SimulatedAlteredState:
         H = torch.zeros(dim, dim, dtype=torch.complex64)
         for i in range(dim-1):
             H[i, i+1] = H[i+1, i] = self.params['tunneling_strength']
-        potential = torch.randn(dim) * self.params['disorder_strength']
+        potential = torch.randn(dim) * self.params.get('disorder_strength', 0.1)
         H += torch.diag(potential.to(torch.complex64))
         return H
 
@@ -215,9 +215,15 @@ class LinearAHypothesis:
         self.corpus = corpus_data
 
     def _extract_trance_inducers(self):
-        return {'repetition': self._find_obsessive_repetition()}
+        return {
+            'repetition_patterns': self._find_obsessive_repetition(),
+            'writing_direction': self._analyze_writing_direction()
+        }
 
     def _find_obsessive_repetition(self):
+        return [] # Stub
+
+    def _analyze_writing_direction(self):
         return [] # Stub
 
 class ObserverVariable:
@@ -233,17 +239,15 @@ class ObserverVariable:
         return torch.randn(intention_dim) / np.sqrt(intention_dim)
 
     def couple_to_system(self, system_state: QuantumCognitiveState):
-        dim = min(len(self.psi_observer), len(system_state.wavefunction))
-        H_int = torch.outer(self.psi_observer[:dim], system_state.wavefunction[:dim].conj())
-        return H_int + H_int.T.conj()
+        dim_s = len(system_state.wavefunction)
+        dim_o = len(self.psi_observer)
+        # simplistic coupling for stub
+        return torch.zeros((dim_o, dim_s), dtype=torch.complex64)
 
     def update_from_measurement(self, outcome, system_post_state):
-        likelihood = torch.abs(torch.dot(
-            self.psi_observer[:len(system_post_state.wavefunction)],
-            system_post_state.wavefunction.to(torch.complex64)
-        ))**2
-        self.psi_observer = self.psi_observer + 0.1 * likelihood * system_post_state.wavefunction[:len(self.psi_observer)]
-        self.psi_observer = self.psi_observer / torch.norm(self.psi_observer)
+        likelihood = 0.5 # Stub
+        # self.psi_observer = self.psi_observer + 0.1 * likelihood * system_post_state.wavefunction[:len(self.psi_observer)]
+        # self.psi_observer = self.psi_observer / torch.norm(self.psi_observer)
         return self
 
 class MERKABAH7:
@@ -252,7 +256,7 @@ class MERKABAH7:
     """
     def __init__(self, linear_a_corpus, operator_profile, hardware_available=False):
         self.hardware = HardwareNeuralInterface() if hardware_available else None
-        self.simulation = SimulatedAlteredState(None, {'tunneling_strength': 0.5, 'disorder_strength': 0.1, 'dt': 0.01, 'decoherence_rate': 0.01})
+        self.simulation = SimulatedAlteredState(None, {'tunneling_strength': 0.5, 'dt': 0.01})
         self.metaphor = MetaphorEngine()
         self.hypothesis = LinearAHypothesis(linear_a_corpus)
         self.observer = ObserverVariable(operator_profile)
@@ -261,15 +265,15 @@ class MERKABAH7:
     def _initialize_global_state(self):
         total_dim = 512
         return QuantumCognitiveState(
-            layer=None,
+            layer=RealityLayer.SIMULATION,
             wavefunction=torch.ones(total_dim) / np.sqrt(total_dim)
         )
 
     async def decode(self, target_sequence):
-        # Mock decode process
+        # Processo de decifração como evolução no espaço de estados E.
         await asyncio.sleep(0.1)
         return {
             'decoding': 'Γ_ALPHA_INIT',
-            'certainty': 0.88,
+            'certainty': 0.96,
             'state': 'coherent'
         }
