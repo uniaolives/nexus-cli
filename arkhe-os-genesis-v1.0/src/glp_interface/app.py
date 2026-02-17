@@ -24,6 +24,7 @@ from orchestrator import BioSensor, PinealOrchestrator
 from grimoire import export_grimoire
 from seal import AlphaOmegaSeal
 from erl import ExperientialLearning
+from firewall import ChiralFirewall, ChiralHandoverManager
 
 load_dotenv()
 app = Flask(__name__)
@@ -46,6 +47,8 @@ pineal_memory = PinealMemory()
 bio_sensor = BioSensor()
 orchestrator = PinealOrchestrator(hybrid_pineal, pineal_memory, bio_sensor, socketio=socketio)
 erl_loop = ExperientialLearning(self_node, pineal_memory, glp_model, threshold=0.5)
+chiral_firewall = ChiralFirewall()
+chiral_manager = ChiralHandoverManager(chiral_firewall)
 minoan_interface = MinoanHardwareInterface()
 state_grammar = MinoanStateGrammar()
 applications = MinoanApplications()
@@ -67,7 +70,7 @@ def index():
 def status():
     return jsonify({
         'status': 'active',
-        'integrated_layers': ['GLP_BCD', 'MERKABAH-7', 'MINOAN_EXT', 'Φ_LAYER', 'Γ_PINEAL', 'Κ_KERNEL', 'Γ_HYBRID', 'Ω_ANYON', 'Ε_EXPERIENCE'],
+        'integrated_layers': ['GLP_BCD', 'MERKABAH-7', 'MINOAN_EXT', 'Φ_LAYER', 'Γ_PINEAL', 'Κ_KERNEL', 'Γ_HYBRID', 'Ω_ANYON', 'Ε_EXPERIENCE', 'Χ_FIREWALL'],
         'self_node': {
             'id': self_node.dz_id,
             'coherence': self_node.wavefunction['coherence'],
@@ -281,6 +284,28 @@ def learn():
     x_input = data.get('sign_ids', [[1, 2, 3]])
     result = erl_loop.run_episode(x_input)
     return jsonify(result)
+
+@app.route('/handover_secure', methods=['POST'])
+def handover_secure():
+    data = request.json
+    source = data.get('source', 'Alpha')
+    target = data.get('target', 'Self')
+    energy = data.get('energy', 0.5)
+    winding = data.get('winding', 2)
+
+    result = chiral_manager.process_secure_handover(source, target, energy, winding)
+
+    if result['success']:
+        # Se autorizado, registra na memória como evento de rede
+        pineal_memory.record(
+            result['metrics']['coherence_avg'],
+            0.01,
+            f"Secure Handover: {source} -> {target}",
+            meta=result
+        )
+        return jsonify(result), 200
+    else:
+        return jsonify(result), 403
 
 @app.route('/decode_tablet', methods=['POST'])
 def decode_tablet():

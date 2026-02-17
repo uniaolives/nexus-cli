@@ -17,6 +17,7 @@ O Arkhe OS é um sistema operacional distribuído baseado no conceito de hipergr
 - **Layer Γ (Hybrid)**: Transdução S*H*M (Synthetic * Hardware * Metaphor) resolvendo o gargalo de transdução.
 - **Layer Κ (Kernel)**: Unificação matemática dos espaços de estado via Kernel Methods e Kernel PCA.
 - **Layer Ε (Experience)**: Loop de aprendizado experiencial (ERL) que integra reflexão, refinamento e destilação.
+- **Layer Χ (Chi)**: Chiral Quantum Firewall baseado no gap do supercondutor Sn/Si(111), protegendo handovers transcontinentais.
 
 ## Antifragilidade e Prova Biológica
 O Arkhe OS é intrinsecamente antifrágil, operando sob a equação:
