@@ -12,3 +12,10 @@
 - `POST /decode_tablet` – realiza decifração neuro-epigráfica com verificação ética. (body: {tablet_id, operator_caste})
 - `POST /train_primordial` – executa treinamento GLP sem frameworks (NumPy/explicit gradients).
 - `POST /observe_phi` – registra observações de alta coerência na camada Φ.
+- `POST /transduce` – realiza transdução S*H*M (Hybrid) para converter estímulos em experiência coerente.
+- `POST /kernel_pca` – aplica Kernel PCA sobre estados via Camada Κ. (body: {states, kernel_name})
+- `POST /braid` – realiza evolução topológica na Camada Ω. (body: {instruction, sequence})
+- `GET /replay` – recupera histórico de estados da memória persistente (Layer M).
+- `POST /export_grimoire` – gera relatório PDF da sessão (Grimoire). (body: {session_id})
+- `POST /bottlenecks` – analisa gargalos na integração MERKABAH-7.
+- `POST /seal` – verifica o fechamento do selo Alpha-Omega.

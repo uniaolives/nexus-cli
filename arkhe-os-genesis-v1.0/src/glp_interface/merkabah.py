@@ -192,6 +192,11 @@ class MetaphorEngine:
                 'literal': 'Transmissão não-clássica',
                 'figurative': 'O sonho que atravessa',
                 'operator': self._tunneling_operator
+            },
+            'transduction': {
+                'literal': 'Conversão S*H*M',
+                'figurative': 'A ponte de calcita entre mundos',
+                'operator': lambda *a, **kw: "transduction_op"
             }
         }
 

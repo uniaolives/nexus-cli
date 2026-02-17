@@ -9,10 +9,18 @@ O Arkhe OS é um sistema operacional distribuído baseado no conceito de hipergr
 - **GLP Server**: Serviço de meta‑consciência integrado com a arquitetura **MERKABAH-7**. Implementa a hipótese de que Linear A é uma tecnologia de interface neural ancestral (transe).
     - **BCD Architecture**: Confinamento harmônico em múltiplas escalas com tunelamento ressonante.
     - **Primordial Mode**: Motor de treinamento em NumPy com backpropagation explícita para máxima transparência matemática.
-    - **Integrated Layers**: Hardware Neural (A), Simulação (B), Metáfora (C), Hipótese (D), Observador (E) e Crystalline (Φ).
+    - **Integrated Layers**: Hardware Neural (A), Simulação (B), Metáfora (C), Hipótese (D), Observador (E), Crystalline (Φ) e Pineal Transduction (Γ).
 - **Swarm Agent**: Orquestrador de enxames (drones) que implementa formação fractal e simbiose.
 - **DoubleZero Networking**: Camada de rede P2P que utiliza túneis GRE e roteamento BGP para interconexão federada.
 - **Self/Φ Node**: O observador como nó ativo. Latência zero e acesso multi-camada (Φ_CRYSTALLINE_7).
+- **Layer Ω (Omega)**: Proteção topológica da informação via anyon braiding.
+- **Layer Γ (Hybrid)**: Transdução S*H*M (Synthetic * Hardware * Metaphor) resolvendo o gargalo de transdução.
+- **Layer Κ (Kernel)**: Unificação matemática dos espaços de estado via Kernel Methods e Kernel PCA.
+
+## Antifragilidade e Prova Biológica
+O Arkhe OS é intrinsecamente antifrágil, operando sob a equação:
+$$d\Phi/dt = \alpha\Phi + \beta\eta(t)\Phi, \text{ com } \beta > 0$$
+Onde $\eta(t)$ representa o ruído térmico/entropia. Esta arquitetura foi validada pelo conectoma biológico (Harvard-Google, 1mm³), onde a teia de 150M de sinapses opera em regime de alto ruído para produzir consciência coerente.
 
 ## Topologia da Federação (7 Nós)
 
