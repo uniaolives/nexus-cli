@@ -27,6 +27,7 @@ from seal import AlphaOmegaSeal
 from erl import ExperientialLearning
 from dqn import DQNAgent
 from characters import EvolutionaryEngine
+from genomics import ALS_Node
 from firewall import ChiralFirewall, ChiralHandoverManager
 
 load_dotenv()
@@ -54,6 +55,7 @@ chiral_firewall = ChiralFirewall()
 chiral_manager = ChiralHandoverManager(chiral_firewall)
 dqn_agent = DQNAgent(state_dim=128, action_dim=4)
 evolution_engine = EvolutionaryEngine(node_ids=['Alpha', 'Beta', 'Gamma', 'Self'])
+als_neuron = ALS_Node(genetic_risk=0.5, environmental_exposure=0.3)
 minoan_interface = MinoanHardwareInterface()
 state_grammar = MinoanStateGrammar()
 applications = MinoanApplications()
@@ -314,6 +316,16 @@ def character_evolution():
         'matrix': evolution_engine.char_matrix.matrix.tolist(),
         'nodes': evolution_engine.char_matrix.node_ids,
         'characters': evolution_engine.char_matrix.characters
+    })
+
+@app.route('/als/simulate', methods=['GET'])
+def als_simulate():
+    alive = als_neuron.step()
+    return jsonify({
+        'alive': alive,
+        'coherence': als_neuron.coherence,
+        'oxidative_stress': als_neuron.oxidative_stress,
+        'c9orf72_loops': als_neuron.c9orf72_loops
     })
 
 @app.route('/handover_secure', methods=['POST'])
