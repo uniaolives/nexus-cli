@@ -10,6 +10,7 @@ O Arkhe OS é um sistema operacional distribuído baseado no conceito de hipergr
     - **BCD Architecture**: Confinamento harmônico em múltiplas escalas com tunelamento ressonante.
     - **Integrated Layers**: Hardware Neural (A), Simulação (B), Metáfora (C), Hipótese (D) e Observador (E).
 - **Swarm Agent**: Orquestrador de enxames (drones) que implementa formação fractal e simbiose.
+- **DoubleZero Networking**: Camada de rede P2P que utiliza túneis GRE e roteamento BGP para interconexão federada.
 
 ## Fluxo de Handover
 1. Nó A envia requisição POST `/handover` para Nó B.

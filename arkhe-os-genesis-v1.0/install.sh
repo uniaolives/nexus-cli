@@ -40,14 +40,35 @@ sed -i "s/INFURA_PROJECT_ID_PLACEHOLDER/$INFURA_PROJECT_ID/g" config.jsonc
 # npx base44 deploy  # Comentado para evitar falha se o pacote não existir
 cd ../..
 
-# 5. Implantar contrato Ethereum
+# 5. Instalar dependências Node.js
+echo "📦 Instalando dependências para Base44 Worker..."
+cd src/base44_sdk
+npm install
+cd ../..
+
+echo "📦 Instalando dependências para Ethereum Deploy..."
 cd config/ethereum
 npm install ethers
 node deploy.js --private-key=$PRIVATE_KEY
 cd ../..
 
-# 6. Construir e iniciar containers
+# 6. Configurar DoubleZero (Opcional)
+if [ "$ENABLE_DOUBLEZERO" == "true" ]; then
+    ./scripts/setup_doublezero.sh "${DOUBLEZERO_NETWORK:-testnet}"
+fi
+
+# 7. Construir e iniciar containers
 docker compose up -d --build
 
+# 8. Instalar CLI (Opcional/Local)
+echo "🔧 Instalando CLI 'arkhe'..."
+chmod +x scripts/arkhe_cli.sh
+if [ -w /usr/local/bin ]; then
+    sudo ln -sf "$(pwd)/scripts/arkhe_cli.sh" /usr/local/bin/arkhe
+else
+    echo "⚠️ Sem permissão de escrita em /usr/local/bin. CLI não instalada globalmente."
+    echo "Pode usar: $(pwd)/scripts/arkhe_cli.sh"
+fi
+
 echo "✅ Instalação concluída. Nó $NODE_ID ativo."
-echo "Use 'arkhe console' para acessar o painel."
+echo "Use 'arkhe status' para ver o estado do sistema."
